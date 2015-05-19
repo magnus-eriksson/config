@@ -1,0 +1,20 @@
+{
+    "name": "maer/config",
+    "description": "A small config library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Magnus Eriksson",
+            "email": "mange@reloop.se"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Maer\\Config\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.3.0"
+    }
+}
