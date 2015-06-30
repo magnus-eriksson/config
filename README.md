@@ -1,5 +1,8 @@
 # A small config package in PHP
 
+[![Build Status](https://api.travis-ci.org/magnus-eriksson/config.svg)](https://travis-ci.org/magnus-eriksson/config)
+
+
 Load config files and set or get values using dot notation for nested arrays.
 
 ## Install
