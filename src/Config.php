@@ -35,6 +35,12 @@ class Config implements ConfigInterface
             return $default;
         }
         
+        // If we have a direct match, return it.
+        // This makes it possible to have keys containing dots
+        if (array_key_exists($key, $this->conf)) {
+            return $this->conf[$key];
+        }
+
         $conf  =& $this->conf;
 
         foreach(explode('.', $key) as $segment) {

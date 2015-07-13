@@ -57,6 +57,10 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
         $result = $this->config->get('level1.level2');
         $this->assertArrayHasKey('level3', $result, "Test return partial nested");
+
+
+        $result = $this->config->get('dotlevel1.dotlevel2');
+        $this->assertEquals("dotvalue2", $result, "Test return key containing dots. Key with dots has priority.");
     }
 
 
