@@ -66,7 +66,7 @@ $config->set('name', 'Jackie Chan');
 $name = $config->get('name');
 # Returnes: Jackie Chan
 
-# Nested arrays uses the dot notation for simplicity
+# Use dot notation for multidimensional arrays
 $genres = $config->get('movies.genres'));
 # Returnes: ['action']
 
@@ -83,7 +83,7 @@ if ($config->isLoaded('path-to-config-file')) {
 ```
 
 ### Use the Factory
-If you just want to get an instance quickly and can't be bothered creating your own factory or using dependency injection, you can use the factory that's included in the pachage. It will always return the same instance:
+If you just want to get an instance quickly and can't be bothered creating your own factory or using dependency injection, you can use the factory that's included in the package. It will always return the same instance:
 
 ```
 <?php
