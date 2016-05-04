@@ -43,11 +43,11 @@ or a Json-file _(must have the .json extension)_:
     "skill": "Everything",
     "movies": {
         "genres": [
-            'action
+            "action"
         ],
         "titles": [
-            'Missing in Action',
-            'The Delta Force'
+            "Missing in Action",
+            "The Delta Force"
         ]
     }
 }
