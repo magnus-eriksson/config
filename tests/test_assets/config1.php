@@ -5,8 +5,9 @@ return [
     'same'  => 'file1',
     'level1' => [
         'level2' => [
-            'level3' => 'level3_value',
-        ],
+            'level3'   => 'level3_value',
+            'level3-1' => 'default_value'
+        ]
     ],
 
     'dotlevel1' => [

@@ -2,6 +2,7 @@
 
 define('CONFIG1_FILE', __DIR__ . '/test_assets/config1.php');
 define('CONFIG2_FILE', __DIR__ . '/test_assets/config2.php');
+define('CONFIG_FILE_JSON', __DIR__ . '/test_assets/config.json');
 
 /**
  * @coversDefaultClass \Maer\Config\Config
@@ -31,6 +32,13 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
         $result = $this->config->get('same');
         $this->assertEquals("file2", $result, "Test duplicate keys overrite");
+
+        // Load Json
+        $this->config->load(CONFIG_FILE_JSON);
+
+        $result = $this->config->get('json.says');
+        $this->assertEquals("hello", $result, "Test json include");
+
     }
  
 
@@ -77,6 +85,34 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $this->config->set('level1.level2.level3', 'level3_new_value');
         $result = $this->config->get('level1.level2.level3');
         $this->assertEquals('level3_new_value', $result, "Setting nested value");        
+
+        $result = $this->config->get('level1.level2.level3-1');
+        $this->assertEquals('default_value', $result, "Setting nested value - Sibling");
+
+    }
+
+
+    /**
+    * @covers Config::override
+    **/
+    public function testOverride()
+    {
+        $result = $this->config->get('level1.level2.level3-1');
+        $this->assertEquals('default_value', $result, "Setting nested value - initial");
+
+        // Set nested values
+        $this->config->override([
+            'level1' => [
+                'level2' => [
+                    'level3' => 'level3_new_value'
+                ]
+            ]
+        ]);
+        $result = $this->config->get('level1.level2.level3');
+        $this->assertEquals('level3_new_value', $result, "Setting nested value");        
+
+        $result = $this->config->get('level1.level2.level3-1');
+        $this->assertEquals('default_value', $result, "Setting nested value - Sibling");        
     }
 
 
@@ -92,6 +128,21 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result, "Test existing key");
 
         $result = $this->config->exists('level1.level2');
+        $this->assertTrue($result, "Test existing nested key");
+    }
+
+    /**
+    * @covers Config::has
+    **/
+    public function testHas()
+    {
+        $result = $this->config->has('invalid_key');
+        $this->assertFalse($result, "Test non existing key");
+
+        $result = $this->config->has('file1');
+        $this->assertTrue($result, "Test existing key");
+
+        $result = $this->config->has('level1.level2');
         $this->assertTrue($result, "Test existing nested key");
     }
 

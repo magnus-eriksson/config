@@ -9,6 +9,9 @@
  * @subpackage Config
  */
 
+use RecursiveIteratorIterator;
+use RecursiveArrayIterator;
+
 class Config implements ConfigInterface
 {
     protected $files = [];
@@ -82,6 +85,15 @@ class Config implements ConfigInterface
     /**
      * {@inheritdoc}
      */
+    public function override(array $array)
+    {
+        $this->merge($array);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
     public function exists($key)
     {
         $conf  =& $this->conf;
@@ -103,6 +115,15 @@ class Config implements ConfigInterface
     /**
      * {@inheritdoc}
      */
+    public function has($key)
+    {
+        return $this->exists($key);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
     public function load($files, $forceReload = false)
     {
         if (!is_array($files)) {
@@ -113,18 +134,24 @@ class Config implements ConfigInterface
         foreach($files as $file) {
 
             if ((array_key_exists($file, $this->files) && !$forceReload) 
-                || !is_file($file)) {
+                || !is_file($file) || !is_readable($file)) {
                 // It's already loaded, or doesn't exist, so let's skip it
                 continue;
             }
 
-            $conf = include $file;
+            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+            $conf = $ext == "json"
+                ? json_decode(file_get_contents($file), true, 512)
+                : include $file;
 
             if (is_array($conf)) {
                 // We're only interested if it is an array
-                $this->conf         = array_replace_recursive($this->conf, $conf);
+                $this->override($conf);
                 $this->files[$file] = true;
             }
+
+            unset($conf);
         }
     }
 
@@ -135,5 +162,25 @@ class Config implements ConfigInterface
     public function isLoaded($file)
     {
         return array_key_exists($file, $this->files);
+    }
+
+
+    /**
+     * Recursivly merge the array to the existing collection
+     * 
+     * @param  array $array
+     * @return array
+     */
+    protected function merge(array $array)
+    {
+        $ritit  = new RecursiveIteratorIterator(new RecursiveArrayIterator($array));
+
+        foreach($ritit as $leafValue) {
+            $keys = array();
+            foreach (range(0, $ritit->getDepth()) as $depth) {
+                $keys[] = $ritit->getSubIterator($depth)->key();
+            }
+            $this->set(join('.', $keys), $leafValue);
+        }
     }
 }

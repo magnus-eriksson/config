@@ -40,12 +40,30 @@ interface ConfigInterface
 
 
     /**
+     * Set multiple values from array
+     * 
+     * @param  array    $values
+     * @return void
+     */
+    public function override(array $values);
+
+
+    /**
      * Check if a key exists in the loaded config files
      * 
      * @param  string   $key        Key, use dot notation for nested config arrays.
      * @return boolean
      */
     public function exists($key);
+
+
+    /**
+     * Alias for Config::exists
+     * 
+     * @param  string   $key        Key, use dot notation for nested config arrays.
+     * @return boolean
+     */
+    public function has($key);
 
 
     /**
