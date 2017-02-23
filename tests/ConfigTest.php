@@ -9,7 +9,7 @@ define('CONFIG_FILE_JSON', __DIR__ . '/test_assets/config.json');
  */
 class ConfigTest extends PHPUnit_Framework_TestCase
 {
- 
+
     public $config;
 
 
@@ -40,7 +40,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("hello", $result, "Test json include");
 
     }
- 
+
 
     /**
     * @covers ::isLoaded
@@ -84,7 +84,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         // Set nested values
         $this->config->set('level1.level2.level3', 'level3_new_value');
         $result = $this->config->get('level1.level2.level3');
-        $this->assertEquals('level3_new_value', $result, "Setting nested value");        
+        $this->assertEquals('level3_new_value', $result, "Setting nested value");
 
         $result = $this->config->get('level1.level2.level3-1');
         $this->assertEquals('default_value', $result, "Setting nested value - Sibling");
@@ -109,10 +109,10 @@ class ConfigTest extends PHPUnit_Framework_TestCase
             ]
         ]);
         $result = $this->config->get('level1.level2.level3');
-        $this->assertEquals('level3_new_value', $result, "Setting nested value");        
+        $this->assertEquals('level3_new_value', $result, "Setting nested value");
 
         $result = $this->config->get('level1.level2.level3-1');
-        $this->assertEquals('default_value', $result, "Setting nested value - Sibling");        
+        $this->assertEquals('default_value', $result, "Setting nested value - Sibling");
     }
 
 

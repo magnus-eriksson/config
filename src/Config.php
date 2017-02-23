@@ -1,8 +1,8 @@
 <?php namespace Maer\Config;
 /**
- * A simple config package to load files containing multidimensional arrays 
+ * A simple config package to load files containing multidimensional arrays
  * and fetch them easily using dot notation.
- * 
+ *
  * @author     Magnus Eriksson <mange@reloop.se>
  * @version    1.1.0
  * @package    Maer
@@ -34,10 +34,10 @@ class Config implements ConfigInterface
      */
     public function get($key = null, $default = null)
     {
-        if (!$key) {
+       if (!$key) {
             return $default;
         }
-        
+
         // If we have a direct match, return it.
         // This makes it possible to have keys containing dots
         if (array_key_exists($key, $this->conf)) {
@@ -47,13 +47,13 @@ class Config implements ConfigInterface
         $conf  =& $this->conf;
 
         foreach(explode('.', $key) as $segment) {
-            
+
             if (!array_key_exists($segment, $conf)) {
                 return $default;
             }
 
             $conf =& $conf[$segment];
-        
+
         }
 
         return $conf;
@@ -99,13 +99,13 @@ class Config implements ConfigInterface
         $conf  =& $this->conf;
 
         foreach(explode('.', $key) as $segment) {
-            
+
             if (!array_key_exists($segment, $conf)) {
                 return false;
             }
 
             $conf =& $conf[$segment];
-        
+
         }
 
         return true;
@@ -133,7 +133,7 @@ class Config implements ConfigInterface
 
         foreach($files as $file) {
 
-            if ((array_key_exists($file, $this->files) && !$forceReload) 
+            if ((array_key_exists($file, $this->files) && !$forceReload)
                 || !is_file($file) || !is_readable($file)) {
                 // It's already loaded, or doesn't exist, so let's skip it
                 continue;
@@ -167,20 +167,12 @@ class Config implements ConfigInterface
 
     /**
      * Recursivly merge the array to the existing collection
-     * 
+     *
      * @param  array $array
      * @return array
      */
     protected function merge(array $array)
     {
-        $ritit  = new RecursiveIteratorIterator(new RecursiveArrayIterator($array));
-
-        foreach($ritit as $leafValue) {
-            $keys = array();
-            foreach (range(0, $ritit->getDepth()) as $depth) {
-                $keys[] = $ritit->getSubIterator($depth)->key();
-            }
-            $this->set(join('.', $keys), $leafValue);
-        }
+        $this->conf = array_replace_recursive($this->conf, $array);
     }
 }
