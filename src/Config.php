@@ -38,22 +38,24 @@ class Config implements ConfigInterface
             return $default;
         }
 
-        // If we have a direct match, return it.
-        // This makes it possible to have keys containing dots
-        if (array_key_exists($key, $this->conf)) {
-            return $this->conf[$key];
-        }
-
         $conf  =& $this->conf;
+        $keys  = explode('.', $key);
 
-        foreach(explode('.', $key) as $segment) {
+        foreach ($keys as $test) {
+            $direct = implode('.', $keys);
 
-            if (!array_key_exists($segment, $conf)) {
+            // Check for a direct match, containing dot
+            if (is_array($conf) && array_key_exists($direct, $conf)) {
+                return $conf[$direct];
+            }
+
+            if (!is_array($conf) || !array_key_exists($test, $conf)) {
+                // No hit, return the default
                 return $default;
             }
 
-            $conf =& $conf[$segment];
-
+            $conf =& $conf[$test];
+            array_shift($keys);
         }
 
         return $conf;
@@ -97,15 +99,22 @@ class Config implements ConfigInterface
     public function exists($key)
     {
         $conf  =& $this->conf;
+        $keys  = explode('.', $key);
 
-        foreach(explode('.', $key) as $segment) {
+        foreach ($keys as $test) {
+            $direct = implode('.', $keys);
 
-            if (!array_key_exists($segment, $conf)) {
+            // Check for a direct match, containing dot
+            if (is_array($conf) && array_key_exists($direct, $conf)) {
+                return true;
+            }
+
+            if (!is_array($conf) || !array_key_exists($test, $conf)) {
                 return false;
             }
 
-            $conf =& $conf[$segment];
-
+            $conf =& $conf[$test];
+            array_shift($keys);
         }
 
         return true;
