@@ -25,7 +25,7 @@ return [
     'skill'   => 'Everything',
     'movies'  => [
         'genres' => [
-            'action
+            'action'
         ],
         'titles' => [
             'Missing in Action',
@@ -74,7 +74,7 @@ require __DIR__ . '/vendor/autoload.php';
 $config = new Maer\Config\Config;
 
 # Load a config file (you can also send in an array with multiple config files
-# or send the array to the constructor upon instantiation. 
+# or send the array to the constructor upon instantiation.
 $config->load('path-to-your-config-file');
 
 $name = $config->get('name', 'this optional string will be returned if the key does not exist');

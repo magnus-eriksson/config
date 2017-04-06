@@ -1,8 +1,8 @@
 <?php namespace Maer\Config;
 /**
- * A simple config package to load files containing multidimensional arrays 
+ * A simple config package to load files containing multidimensional arrays
  * and fetch them easily using dot notation.
- * 
+ *
  * @author     Magnus Eriksson <mange@reloop.se>
  * @version    1.1.0
  * @package    Maer
@@ -34,26 +34,28 @@ class Config implements ConfigInterface
      */
     public function get($key = null, $default = null)
     {
-        if (!$key) {
+       if (!$key) {
             return $default;
-        }
-        
-        // If we have a direct match, return it.
-        // This makes it possible to have keys containing dots
-        if (array_key_exists($key, $this->conf)) {
-            return $this->conf[$key];
         }
 
         $conf  =& $this->conf;
+        $keys  = explode('.', $key);
 
-        foreach(explode('.', $key) as $segment) {
-            
-            if (!array_key_exists($segment, $conf)) {
+        foreach ($keys as $test) {
+            $direct = implode('.', $keys);
+
+            // Check for a direct match, containing dot
+            if (is_array($conf) && array_key_exists($direct, $conf)) {
+                return $conf[$direct];
+            }
+
+            if (!is_array($conf) || !array_key_exists($test, $conf)) {
+                // No hit, return the default
                 return $default;
             }
 
-            $conf =& $conf[$segment];
-        
+            $conf =& $conf[$test];
+            array_shift($keys);
         }
 
         return $conf;
@@ -97,15 +99,22 @@ class Config implements ConfigInterface
     public function exists($key)
     {
         $conf  =& $this->conf;
+        $keys  = explode('.', $key);
 
-        foreach(explode('.', $key) as $segment) {
-            
-            if (!array_key_exists($segment, $conf)) {
+        foreach ($keys as $test) {
+            $direct = implode('.', $keys);
+
+            // Check for a direct match, containing dot
+            if (is_array($conf) && array_key_exists($direct, $conf)) {
+                return true;
+            }
+
+            if (!is_array($conf) || !array_key_exists($test, $conf)) {
                 return false;
             }
 
-            $conf =& $conf[$segment];
-        
+            $conf =& $conf[$test];
+            array_shift($keys);
         }
 
         return true;
@@ -133,7 +142,7 @@ class Config implements ConfigInterface
 
         foreach($files as $file) {
 
-            if ((array_key_exists($file, $this->files) && !$forceReload) 
+            if ((array_key_exists($file, $this->files) && !$forceReload)
                 || !is_file($file) || !is_readable($file)) {
                 // It's already loaded, or doesn't exist, so let's skip it
                 continue;
@@ -167,20 +176,12 @@ class Config implements ConfigInterface
 
     /**
      * Recursivly merge the array to the existing collection
-     * 
+     *
      * @param  array $array
      * @return array
      */
     protected function merge(array $array)
     {
-        $ritit  = new RecursiveIteratorIterator(new RecursiveArrayIterator($array));
-
-        foreach($ritit as $leafValue) {
-            $keys = array();
-            foreach (range(0, $ritit->getDepth()) as $depth) {
-                $keys[] = $ritit->getSubIterator($depth)->key();
-            }
-            $this->set(join('.', $keys), $leafValue);
-        }
+        $this->conf = array_replace_recursive($this->conf, $array);
     }
 }
