@@ -1,8 +1,8 @@
 <?php namespace Maer\Config;
 /**
- * A simple config package to load files containing multidimensional arrays 
+ * A simple config package to load files containing multidimensional arrays
  * and fetch them easily using dot notation.
- * 
+ *
  * @author     Magnus Eriksson <mange@reloop.se>
  * @version    1.1.0
  * @package    Maer
@@ -13,7 +13,7 @@ interface ConfigInterface
 {
     /**
      * Create a new instance
-     * 
+     *
      * @param  array    $files  Array of absolut paths to files that should be loaded upon instantiation
      */
     public function __construct(array $files = array());
@@ -21,7 +21,7 @@ interface ConfigInterface
 
     /**
      * Get a value from the loaded config files
-     * 
+     *
      * @param  string   $key        Key, use dot notation for nested config arrays.
      * @param  mixed    $default    Returned if key is not found
      * @return mixed    Value|$default
@@ -31,7 +31,7 @@ interface ConfigInterface
 
     /**
      * Set a new or overwrite an existing value
-     * 
+     *
      * @param  string   $key        Key, use dot notation for nested config arrays.
      * @param  mixed    $value      Value to set
      * @return mixed    $value
@@ -40,8 +40,19 @@ interface ConfigInterface
 
 
     /**
+     * Push an item into an array
+     *
+     * @param  string   $key        Key, use dot notation for nested config arrays.
+     * @param  mixed    $value      Value to push
+     * @throws \UnexpectedValueException if the target isn't an array
+     * @return void
+     */
+    public function push($key, $value);
+
+
+    /**
      * Set multiple values from array
-     * 
+     *
      * @param  array    $values
      * @return void
      */
@@ -50,7 +61,7 @@ interface ConfigInterface
 
     /**
      * Check if a key exists in the loaded config files
-     * 
+     *
      * @param  string   $key        Key, use dot notation for nested config arrays.
      * @return boolean
      */
@@ -59,7 +70,7 @@ interface ConfigInterface
 
     /**
      * Alias for Config::exists
-     * 
+     *
      * @param  string   $key        Key, use dot notation for nested config arrays.
      * @return boolean
      */
@@ -68,7 +79,7 @@ interface ConfigInterface
 
     /**
      * Load one or more config files
-     * 
+     *
      * @param  string|array  $files         Absolute paths to the config files
      * @param  boolean       $forceReload   If true, the file will be re-read if it already has been loaded
      * @return void
@@ -78,7 +89,7 @@ interface ConfigInterface
 
     /**
      * Check if a config file has been loaded
-     * 
+     *
      * @param  string   $file   Absolute path to the config file
      * @return boolean
      */
