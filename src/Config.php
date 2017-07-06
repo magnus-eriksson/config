@@ -11,6 +11,7 @@
 
 use RecursiveIteratorIterator;
 use RecursiveArrayIterator;
+use UnexpectedValueException;
 
 class Config implements ConfigInterface
 {
@@ -81,6 +82,21 @@ class Config implements ConfigInterface
         }
 
         return $conf[array_shift($segments)] = $value;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function push($key, $value)
+    {
+        $items = $this->get($key);
+        if (!is_array($items)) {
+            throw new UnexpectedValueException("Expected the target to be array, got " .  gettype($items));
+        }
+
+        $items[] = $value;
+        $this->set($key, $items);
     }
 
 

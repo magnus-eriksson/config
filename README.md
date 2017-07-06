@@ -91,6 +91,10 @@ $config->override(['name' => 'Chuck Norris', 'skill' => 'Something new']);
 $genres = $config->get('movies.genres'));
 # Returnes: ['action']
 
+# Push a new item to an existing array
+$config->push('movies.genres', 'Some new genre'));
+# If the target isn't an array, an UnexpectedValueException will be thrown.
+
 # Check if a key is set/exists
 # You can also $config->has('name'), which is an alias of exists
 if ($config->exists('name')) {
