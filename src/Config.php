@@ -1,4 +1,5 @@
 <?php namespace Maer\Config;
+
 /**
  * A simple config package to load files containing multidimensional arrays
  * and fetch them easily using dot notation.
@@ -9,8 +10,6 @@
  * @subpackage Config
  */
 
-use RecursiveIteratorIterator;
-use RecursiveArrayIterator;
 use UnexpectedValueException;
 
 class Config implements ConfigInterface
@@ -35,12 +34,12 @@ class Config implements ConfigInterface
      */
     public function get($key = null, $default = null)
     {
-       if (!$key) {
+        if (!$key) {
             return $default;
         }
 
-        $conf  =& $this->conf;
-        $keys  = explode('.', $key);
+        $conf =& $this->conf;
+        $keys = explode('.', $key);
 
         foreach ($keys as $test) {
             $direct = implode('.', $keys);
@@ -72,10 +71,9 @@ class Config implements ConfigInterface
 
         $segments = explode('.', $key);
 
-        while (count($segments) > 1)
-        {
+        while (count($segments) > 1) {
             $segment = array_shift($segments);
-            if ( ! isset($conf[$segment]) || ! is_array($conf[$segment])) {
+            if (!isset($conf[$segment]) || !is_array($conf[$segment])) {
                 $conf[$segment] = array();
             }
             $conf =& $conf[$segment];
@@ -92,7 +90,7 @@ class Config implements ConfigInterface
     {
         $items = $this->get($key);
         if (!is_array($items)) {
-            throw new UnexpectedValueException("Expected the target to be array, got " .  gettype($items));
+            throw new UnexpectedValueException("Expected the target to be array, got " . gettype($items));
         }
 
         $items[] = $value;
@@ -114,8 +112,8 @@ class Config implements ConfigInterface
      */
     public function exists($key)
     {
-        $conf  =& $this->conf;
-        $keys  = explode('.', $key);
+        $conf =& $this->conf;
+        $keys = explode('.', $key);
 
         foreach ($keys as $test) {
             $direct = implode('.', $keys);
@@ -156,7 +154,7 @@ class Config implements ConfigInterface
             $files = array($files);
         }
 
-        foreach($files as $file) {
+        foreach ($files as $file) {
 
             if ((array_key_exists($file, $this->files) && !$forceReload)
                 || !is_file($file) || !is_readable($file)) {
@@ -194,7 +192,6 @@ class Config implements ConfigInterface
      * Recursivly merge the array to the existing collection
      *
      * @param  array $array
-     * @return array
      */
     protected function merge(array $array)
     {
