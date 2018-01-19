@@ -1,20 +1,17 @@
 <?php namespace Maer\Config;
 
-/**
- * A simple config package to load files containing multidimensional arrays
- * and fetch them easily using dot notation.
- *
- * @author     Magnus Eriksson <mange@reloop.se>
- * @version    1.1.0
- * @package    Maer
- * @subpackage Config
- */
-
 use UnexpectedValueException;
 
 class Config implements ConfigInterface
 {
+    /**
+     * @var array
+     */
     protected $files = [];
+
+    /**
+     * @var array
+     */
     protected $conf  = [];
 
 
@@ -155,7 +152,6 @@ class Config implements ConfigInterface
         }
 
         foreach ($files as $file) {
-
             if ((array_key_exists($file, $this->files) && !$forceReload)
                 || !is_file($file) || !is_readable($file)) {
                 // It's already loaded, or doesn't exist, so let's skip it

@@ -1,13 +1,4 @@
 <?php namespace Maer\Config;
-/**
- * A simple config package to load files containing multidimensional arrays
- * and fetch them easily using dot notation.
- *
- * @author     Magnus Eriksson <mange@reloop.se>
- * @version    1.1.0
- * @package    Maer
- * @subpackage Config
- */
 
 interface ConfigInterface
 {
