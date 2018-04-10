@@ -1,6 +1,7 @@
 <?php namespace Maer\Config;
 
 use UnexpectedValueException;
+use Maer\Config\Readers;
 
 class Config implements ConfigInterface
 {
@@ -14,12 +15,22 @@ class Config implements ConfigInterface
      */
     protected $conf  = [];
 
+    protected $readers = [
+        'php'   => null,
+        'json'  => null,
+        'ini'   => null,
+    ];
+
 
     /**
      * {@inheritdoc}
      */
     public function __construct(array $files = array())
     {
+        $this->readers['php']  = new Readers\ArrayReader;
+        $this->readers['json'] = new Readers\JsonReader;
+        $this->readers['ini']  = new Readers\IniReader;
+
         if ($files) {
             $this->load($files);
         }
@@ -160,12 +171,14 @@ class Config implements ConfigInterface
 
             $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
-            $conf = $ext == "json"
-                ? json_decode(file_get_contents($file), true, 512)
-                : include $file;
+            if (!array_key_exists($ext, $this->readers)) {
+                throw new \Exception("No reader found for the extension '{$ext}'");
+            }
 
-            if (is_array($conf)) {
-                // We're only interested if it is an array
+            $conf = $this->readers[$ext]->read($file);
+
+            if ($conf && is_array($conf)) {
+                // We're only interested if it is a non-empty array
                 $this->override($conf);
                 $this->files[$file] = true;
             }

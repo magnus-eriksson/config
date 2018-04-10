@@ -3,6 +3,7 @@
 define('CONFIG1_FILE', __DIR__ . '/test_assets/config1.php');
 define('CONFIG2_FILE', __DIR__ . '/test_assets/config2.php');
 define('CONFIG_FILE_JSON', __DIR__ . '/test_assets/config.json');
+define('CONFIG_FILE_INI', __DIR__ . '/test_assets/config.ini');
 
 /**
  * @coversDefaultClass \Maer\Config\Config
@@ -39,6 +40,11 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $result = $this->config->get('json.says');
         $this->assertEquals("hello", $result, "Test json include");
 
+        // Load ini
+        $this->config->load(CONFIG_FILE_INI);
+
+        $result = $this->config->get('iniconfig.says');
+        $this->assertEquals("hello ini", $result, "Test ini include");
     }
 
 
@@ -88,7 +94,6 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
         $result = $this->config->get('level1.level2.level3-1');
         $this->assertEquals('default_value', $result, "Setting nested value - Sibling");
-
     }
 
 
