@@ -6,8 +6,9 @@ interface ConfigInterface
      * Create a new instance
      *
      * @param  array    $files  Array of absolut paths to files that should be loaded upon instantiation
+     * @param  array    $options
      */
-    public function __construct(array $files = array());
+    public function __construct(array $files = [], array $options = []);
 
 
     /**
@@ -21,13 +22,13 @@ interface ConfigInterface
 
 
     /**
-     * Set a new or overwrite an existing value
+     * Set new or overwrite existing values
      *
-     * @param  string   $key        Key, use dot notation for nested config arrays.
-     * @param  mixed    $value      Value to set
-     * @return mixed    $value
+     * @param  string|array $key   If array, it's an alias for override. If string, use dot notation for nested config arrays.
+     * @param  mixed        $value Value to set
+     * @return mixed        $value
      */
-    public function set($key, $value);
+    public function set($key, $value = null);
 
 
     /**
@@ -85,4 +86,12 @@ interface ConfigInterface
      * @return boolean
      */
     public function isLoaded($file);
+
+    /**
+     * Add a new reader
+     *
+     * @param string                  $extension Associated file extension
+     * @param Readers\ReaderInterface $reader
+     */
+    public function setReader($extension, Readers\ReaderInterface $reader);
 }

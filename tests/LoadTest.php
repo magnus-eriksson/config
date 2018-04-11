@@ -55,6 +55,8 @@ class LoadTest extends TestCase
             CONFIGS . '/config.php',
             CONFIGS . '/config_override.php',
         ]);
-        $this->assertEquals('override', $this->config->get('root.array.second'), 'Load array');
+        $this->assertEquals('original', $this->config->get('root.array.first'), 'Override original');
+        $this->assertEquals('override', $this->config->get('root.array.second'), 'Override new');
+        $this->assertEquals('foo bar array', $this->config->get('hello.world'), 'Override sibling');
     }
 }

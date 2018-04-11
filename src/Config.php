@@ -15,21 +15,24 @@ class Config implements ConfigInterface
      */
     protected $conf  = [];
 
-    protected $readers = [
-        'php'   => null,
-        'json'  => null,
-        'ini'   => null,
-    ];
+    /**
+     * @var array
+     */
+    protected $readers = [];
 
 
     /**
      * {@inheritdoc}
      */
-    public function __construct(array $files = array())
+    public function __construct(array $files = [], array $options = [])
     {
-        $this->readers['php']  = new Readers\ArrayReader;
-        $this->readers['json'] = new Readers\JsonReader;
-        $this->readers['ini']  = new Readers\IniReader;
+        $this->setReader('php', $options['readers']['php'] ?? new Readers\ArrayReader);
+        $this->setReader('ini', $options['readers']['ini'] ?? new Readers\IniReader);
+        $this->setReader('json', $options['readers']['json'] ?? new Readers\JsonReader);
+
+        foreach ($options['readers'] ?? [] as $ext => $reader) {
+            $this->setReader($ext, $reader);
+        }
 
         if ($files) {
             $this->load($files);
@@ -73,8 +76,16 @@ class Config implements ConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function set($key, $value)
+    public function set($key, $value = null)
     {
+        if (is_array($key)) {
+            return $this->override($key);
+        }
+
+        if (func_num_args() < 2) {
+            throw new \ArgumentCountError("To few arguments passed to Config::set(). Expected 2 got 1");
+        }
+
         $conf =& $this->conf;
 
         $segments = explode('.', $key);
@@ -82,7 +93,7 @@ class Config implements ConfigInterface
         while (count($segments) > 1) {
             $segment = array_shift($segments);
             if (!isset($conf[$segment]) || !is_array($conf[$segment])) {
-                $conf[$segment] = array();
+                $conf[$segment] = [];
             }
             $conf =& $conf[$segment];
         }
@@ -159,7 +170,7 @@ class Config implements ConfigInterface
     {
         if (!is_array($files)) {
             // Make it an array so we can use the same code
-            $files = array($files);
+            $files = [$files];
         }
 
         foreach ($files as $file) {
@@ -194,6 +205,15 @@ class Config implements ConfigInterface
     public function isLoaded($file)
     {
         return array_key_exists($file, $this->files);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setReader($extension, Readers\ReaderInterface $reader)
+    {
+        $this->readers[strtolower($extension)] = $reader;
     }
 
 
