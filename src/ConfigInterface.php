@@ -47,25 +47,15 @@ interface ConfigInterface
 
 
     /**
-     * Merge multiple values from array. Alias for merge()
+     * Merge multiple values from array. Alias for set() with only one parameter
      *
      * @param  array    $values
      *
-     * @deprecated An old alias. Use Config::merge() instead
+     * @deprecated An old alias. Use Config::set(array $array) instead
      *
      * @return void
      */
     public function override(array $values);
-
-
-    /**
-     * Merge multiple values from array
-     *
-     * @param  array    $values
-     *
-     * @return void
-     */
-    public function merge(array $values);
 
 
     /**

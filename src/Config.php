@@ -79,7 +79,7 @@ class Config implements ConfigInterface
     public function set($key, $value = null)
     {
         if (is_array($key)) {
-            return $this->override($key);
+            return $this->merge($key);
         }
 
         if (func_num_args() < 2) {
@@ -123,17 +123,6 @@ class Config implements ConfigInterface
     public function override(array $array)
     {
         $this->merge($array);
-    }
-
-
-    /**
-     * Recursivly merge the array to the existing collection
-     *
-     * @param  array $array
-     */
-    public function merge(array $array)
-    {
-        $this->conf = array_replace_recursive($this->conf, $array);
     }
 
 
@@ -225,5 +214,16 @@ class Config implements ConfigInterface
     public function setReader($extension, Readers\ReaderInterface $reader)
     {
         $this->readers[strtolower($extension)] = $reader;
+    }
+
+
+    /**
+     * Recursivly merge the array to the existing collection
+     *
+     * @param  array $array
+     */
+    protected function merge(array $array)
+    {
+        $this->conf = array_replace_recursive($this->conf, $array);
     }
 }

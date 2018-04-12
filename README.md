@@ -91,12 +91,9 @@ $config->set('name', 'Jackie Chan');
 $name = $config->get('name');
 # Returnes: Jackie Chan
 
-# If you haven't loaded any file (or if you want to override the complete config),
-# you can pass an array as the first parameter. This either add new keys or update existing.
-$config->set(['name' => 'Jackie Chan', 'skill' => 'Kicking ass']);
-
-# You can send in array instead, using the 'override()' method
-$config->override(['name' => 'Chuck Norris', 'skill' => 'Something new']);
+# If you haven't loaded any file (or if you want to merge with another array),
+# you can pass an array as the first parameter. This uses the array_replace_recursive() strategy.
+$config->set(['name' => 'Chuck Norris', 'skill' => 'Something new']);
 
 # Use dot notation for multidimensional arrays
 $genres = $config->get('movies.genres'));
