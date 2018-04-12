@@ -127,9 +127,20 @@ class Config implements ConfigInterface
 
 
     /**
+     * Recursivly merge the array to the existing collection
+     *
+     * @param  array $array
+     */
+    public function merge(array $array)
+    {
+        $this->conf = array_replace_recursive($this->conf, $array);
+    }
+
+
+    /**
      * {@inheritdoc}
      */
-    public function exists($key)
+    public function has($key)
     {
         $conf =& $this->conf;
         $keys = explode('.', $key);
@@ -157,9 +168,9 @@ class Config implements ConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function has($key)
+    public function exists($key)
     {
-        return $this->exists($key);
+        return $this->has($key);
     }
 
 
@@ -214,16 +225,5 @@ class Config implements ConfigInterface
     public function setReader($extension, Readers\ReaderInterface $reader)
     {
         $this->readers[strtolower($extension)] = $reader;
-    }
-
-
-    /**
-     * Recursivly merge the array to the existing collection
-     *
-     * @param  array $array
-     */
-    protected function merge(array $array)
-    {
-        $this->conf = array_replace_recursive($this->conf, $array);
     }
 }
