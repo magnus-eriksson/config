@@ -15,11 +15,11 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.0.0",
-        "phpunit/phpunit": "^6.5"
+        "php": ">=7.0.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.2"
+        "squizlabs/php_codesniffer": "^3.2",
+        "phpunit/phpunit": "^6.5"
     },
     "scripts": {
         "cs": "./vendor/bin/phpcs --standard=PSR2 --extensions=php --ignore=vendor/,tests/ -n -s ./",
